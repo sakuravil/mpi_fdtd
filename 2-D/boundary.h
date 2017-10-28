@@ -69,7 +69,7 @@ void Mur_1st_ABC(int id){
 }
 
 void Mur_2nd_ABC(void){
-  double	p_1, p_2, p_3;
+  float p_1, p_2, p_3;
   i=0;
   j=1;
   P1[i][j] = PX1[1][j] + Ca0 * (P1[i+1][j] - PX1[0][j]);
@@ -168,7 +168,7 @@ void save_bound(int id){
 void boundary(int id){
   switch(BC){
     case 0:
-      Mur_1st_ABC(id);
+      Mur_1st_ABC(id);  // only use
       save_bound(id);
       break;
 
@@ -194,3 +194,4 @@ void boundary(int id){
   }
 }
 
+#endif
