@@ -189,6 +189,7 @@ int main(int argc,char** argv){
     printf("   dt = %f[ms]\n\n",(float)dt*1000);
   }
   omp_set_num_threads(2);
+  
   // main calculation 
   for( T = 0 ; T <= T_max ; ++T ){
     stopwatch[0][0]=MPI_Wtime();

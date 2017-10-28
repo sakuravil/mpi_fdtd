@@ -6,8 +6,8 @@
 // Only Mur_1st_ABC function is parallelized.
 // This function is assumed to be used only.
 
-void	Hig_2nd_ABC(void){
-  for( j = 1 ; j <= y_max - 2 ; ++j ){
+void Hig_2nd_ABC(void){
+  for(j = 1; j <= y_max - 2; ++j){
     i=0;
     P1[i][j] = (Cah1+Cah2)*(P1[i+1][j] - PX1[0][j])
           -Cah1*Cah2*(P1[i+2][j] -2*PX1[1][j] +PX2[0][j])
@@ -21,8 +21,7 @@ void	Hig_2nd_ABC(void){
           + ((1-d1) + (1-d2))*(PX1[4][j])
           -(1-d1)*(1-d2)*(PX2[5][j]);
   }
-  
-  for( i = 1 ; i <= x_max - 2 ; ++i ){
+  for(i = 1; i <= x_max - 2; ++i){
     j=0;
     P1[i][j] = (Cah1+Cah2)*(P1[i][j+1] - PY1[0][i])
           -Cah1*Cah2*(P1[i][j+2] -2*PY1[1][i] +PY2[0][i])
@@ -38,8 +37,8 @@ void	Hig_2nd_ABC(void){
   }
 }
 
-void	Hig_1st_ABC(void){
-  for( j = 1 ; j <= y_max - 2 ; ++j ){
+void Hig_1st_ABC(void){
+  for(j = 1; j <= y_max - 2; ++j){
     i=0;
     P1[i][j] = (1.0-d1)*PX1[1][j] + Cah1 * (P1[i+1][j] - PX1[0][j]);
     i = x_max - 1;
@@ -53,9 +52,9 @@ void	Hig_1st_ABC(void){
   }
 }
 
-void	Mur_1st_ABC(int id){
+void Mur_1st_ABC(int id){
   start=(x_max/P)*id;
-  for( j = 1 ; j <= y_max - 2 ; ++j){
+  for(j = 1; j <= y_max - 2; ++j){
     if(id==0){
       i=0;
       P1[i][j] = PX1[1][j] + Ca0 * (P1[i+1][j] - PX1[0][j]);
@@ -64,8 +63,7 @@ void	Mur_1st_ABC(int id){
       P1[i][j] = PX1[4][j] + Ca0 * (P1[i-1][j] - PX1[3][j]);
     }
   }
-
-  for( i = 1 + start ; i <= x_max/P + start; ++i ){
+  for(i = 1 + start; i <= x_max/P + start; ++i){
     if(i<=x_max-2){
       j=0;
       P1[i][j] = PY1[1][i] + Ca0 * (P1[i][j+1] - PY1[0][i]);
@@ -76,7 +74,7 @@ void	Mur_1st_ABC(int id){
 }
 
 
-void	Mur_2nd_ABC(void){
+void Mur_2nd_ABC(void){
   float	p_1, p_2, p_3;
   i=0;
   j=1;
@@ -88,7 +86,7 @@ void	Mur_2nd_ABC(void){
   P1[i][j] = PX1[4][j] + Ca0 * (P1[i-1][j] - PX1[3][j]);
   j = y_max-2;
   P1[i][j] = PX1[4][j] + Ca0 * (P1[i-1][j] - PX1[3][j]);
-  for( j = 2 ; j <= y_max - 3 ; ++j ){
+  for(j = 2; j <= y_max - 3; ++j){
     i=0;
     p_1 = Ca0*(P1[i+1][j]+PX2[0][j]);
     p_2 = Ca1*(PX1[0][j]+PX1[1][j]);
@@ -112,7 +110,7 @@ void	Mur_2nd_ABC(void){
   i=x_max-2;
   P1[i][j] = PY1[4][i] + Ca0 * (P1[i][j-1] - PY1[3][i]);
 
-  for( i = 2 ; i <= x_max - 3 ; ++i )	{
+  for(i = 2; i <= x_max - 3; ++i){
     j=0;
     p_1 = Ca0*(P1[i][j+1]+PY2[0][i]);
     p_2 = Ca1*(PY1[0][i]+PY1[1][i]);
@@ -131,7 +129,7 @@ void	Mur_2nd_ABC(void){
 void save_bound(int id){
   start=(x_max/P)*id;
 
-  for( j = 1 ; j <= y_max - 2 ; ++j ){
+  for(j = 1; j <= y_max - 2; ++j){
     if(id==0){
       i=0;
       PX2[0][j] = PX1[0][j];
@@ -150,8 +148,7 @@ void save_bound(int id){
       PX1[5][j] = P1[i-2][j];
     }
   }
-
-  for( i = 1 + start ; i <= x_max/P + start ; ++i ){
+  for(i = 1 + start; i <= x_max/P + start; ++i){
     if(i<=x_max-2){
       j=0;
       PY2[0][i] = PY1[0][i];
@@ -172,7 +169,7 @@ void save_bound(int id){
   }
 }
 
-void boundary (int id){
+void boundary(int id){
   switch(BC){
     case 0:
       Mur_1st_ABC(id); // only use

@@ -69,7 +69,7 @@ void Make_param(void){
   // sound velocity, 
   // cofficient of loss term      caluculation
   hasu_o0 = 2*PI*f/c0;                                  // actual wave number 
-  hasu0 = sqrt( hasu_o0*hasu_o0 - gensui0*gensui0 );    // wave number in case of loss
+  hasu0 = sqrt(hasu_o0*hasu_o0 - gensui0*gensui0);      // wave number in case of loss
   c_m0 = 2*PI*f/hasu0;          
   alpha0 = 2*hasu_o0*gensui0*rou0*c_m0/hasu0;           // absorption term η
 
@@ -89,7 +89,7 @@ void Make_param(void){
   d2= 0.005;
   Ca0 = (c_m0 * dt - dx)/(c_m0 * dt + dx);
   Ca1 = (dx*2) / ( c_m0 * dt + dx );
-  Ca2 = (dx * c_m0 * dt * c_m0 * dt)/(dx * dx * 2 *( c_m0 * dt + dx));
+  Ca2 = (dx * c_m0 * dt * c_m0 * dt)/(dx * dx * 2 *(c_m0 * dt + dx));
 
   Cah1 = (a1*c_m0 * dt - dx)/(a1*c_m0 * dt + dx);
   Cah2 = (a2*c_m0 * dt - dx)/(a2*c_m0 * dt + dx);
@@ -116,7 +116,7 @@ float Driver(int T){
       so = exp(-al*(dt*(float)T-tau)*(dt*(float)T-tau))*sin(w*(dt*(float)T-tau));
       break;
 
-    case 2: /*パルス波（ハニング）*/
+    case 2:
       if(T <= W_end)so = (float)((1-cos((float)(w*dt*(float)T/WN)))*sin((float)(w * dt * (float)T ))/2);
       else so = 0.0;
       break;
@@ -166,9 +166,9 @@ void OutputF(void){
 }
 
 void OutputW(int id){
-  char    file12[50] = "t_wave.dat";
-  char    file13[50] = "r_wave.dat";
-  FILE    *fp12,*fp13;
+  char file12[50] = "t_wave.dat";
+  char file13[50] = "r_wave.dat";
+  FILE *fp12,*fp13;
   float sub_t;
   float bun1,bun2;
 
@@ -255,11 +255,9 @@ void use_popen(void){
   if ((fp = popen(command, "r")) == NULL){
     return;
   }
-
   while (fgets(output, MAX_STRING, fp) != NULL) {
     printf("%s", output);
   }
-
   if (pclose(fp) == -1){
   }
 }
