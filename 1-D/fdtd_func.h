@@ -245,20 +245,4 @@ void FieldSnap(float recv[][3200]){
   fclose(fp[k]);        
 }
 
-// use memory
-void use_popen(void){
-  FILE *fp;
-  char command[MAX_STRING];
-  char output[MAX_STRING];
-  sprintf(command, "grep VmSize /proc/%d/status", getpid());
-  if ((fp = popen(command, "r")) == NULL){
-    return;
-  }
-  while (fgets(output, MAX_STRING, fp) != NULL) {
-    printf("%s", output);
-  }
-  if (pclose(fp) == -1){
-  }
-}
-
 #endif

@@ -100,18 +100,18 @@ float Driver(int T){
   Tr = w * dt * (float)T / WN;
   switch(SC){
     case 0:
-      if(Tr <= PI)so = ((1 - cos((float)(w * dt * (double)T/WN )))*sin((double)(w * dt * (double)T))/2);
-      else so = sin((float)(w * dt * (double)T));
+      if(Tr <= PI)so = ((1 - cos((float)(w * dt * (float)T/WN )))*sin((double)(w * dt * (double)T))/2);
+      else so = sin((float)(w * dt * (float)T));
       break;
 
     case 1: 
       tau = (float)WN/f;
       al = (4/tau)*(4/tau);
-      so = exp(-al*(dt*(float)T-tau)*(dt*(double)T-tau))*sin(w*(dt*(double)T-tau));
+      so = exp(-al*(dt*(float)T-tau)*(dt*(float)T-tau))*sin(w*(dt*(double)T-tau));
       break;
 
     case 2: 
-      if(T <= W_end)so = (float)((1-cos((double)(w*dt*(double)T/WN)))*sin((double)(w * dt * (double)T))/2);
+      if(T <= W_end)so = (float)((1-cos((float)(w*dt*(double)T/WN)))*sin((double)(w * dt * (double)T))/2);
       else so = 0.0;
       break;
 
@@ -121,7 +121,7 @@ float Driver(int T){
     default: 
       tau = (float)WN/f;
       al = (4/tau)*(4/tau);
-      so = exp(-al*(dt*(float)T-tau)*(dt*(double)T-tau))*sin(w*(dt*(double)T-tau));
+      so = exp(-al*(dt*(float)T-tau)*(dt*(float)T-tau))*sin(w*(dt*(double)T-tau));
   }
   return  so;
 }
@@ -236,22 +236,6 @@ void FieldSnap(float recv[][3200]){
     j = j + ng ;
   }
   fclose(fp[k]);        
-}
-
-
-void use_popen(void){
-  FILE *fp;
-  char command[MAX_STRING];
-  char output[MAX_STRING];
-  sprintf(command, "grep VmSize /proc/%d/status", getpid());
-  if((fp = popen(command, "r")) == NULL){
-    return;
-  }
-  while(fgets(output, MAX_STRING, fp) != NULL) {
-    printf("%s", output);
-  }
-  if(pclose(fp) == -1){
-  }
 }
 
 #endif

@@ -4,40 +4,40 @@
 #define MAX_STRING 128
 #define PI 3.14159265358979
 
-static  double  P1[X_m_max][Y_m_max];
-static  double  Vx[X_m_max][Y_m_max];
-static  double  Vy[X_m_max][Y_m_max];
-static  double  send[3200];
-static  double  recv[3200]={0},recv_P1[X_m_max][Y_m_max];
-static  double  data_s[3200]={0};
-static  double  data_r[3200]={0};
-static  double  PX1[6][Y_m_max];
-static  double  PY1[6][X_m_max];
-static  double  PX2[6][Y_m_max];
-static  double  PY2[6][X_m_max];
-static  double  amp1[T_max_m],amp2[T_max_m];
-static  double  time_e[10000]={0},time_s[10000]={0};
+float  P1[X_m_max][Y_m_max];
+float  Vx[X_m_max][Y_m_max];
+float  Vy[X_m_max][Y_m_max];
+float  send[3200];
+float  recv[3200]={0},recv_P1[X_m_max][Y_m_max];
+float  data_s[3200]={0};
+float  data_r[3200]={0};
+float  PX1[6][Y_m_max];
+float  PY1[6][X_m_max];
+float  PX2[6][Y_m_max];
+float  PY2[6][X_m_max];
+float  amp1[T_max_m],amp2[T_max_m];
+float  time_e[10000]={0},time_s[10000]={0};
 
-static  double  f, dx, dt, range, depth, cal_time;
-static  double  rou0, c0, gensui0, absp0, alpha0, kap0, hasu0, c_m0, hasu_o0;
-static  double  Cp1, Cp2, Cv1, Cv2;
-static  double  Ca0, Ca1, Ca2, Cah1, Cah2, a1, a2, d1, d2;
+float  f, dx, dt, range, depth, cal_time;
+float  rou0, c0, gensui0, absp0, alpha0, kap0, hasu0, c_m0, hasu_o0;
+float  Cp1, Cp2, Cv1, Cv2;
+float  Ca0, Ca1, Ca2, Cah1, Cah2, a1, a2, d1, d2;
 
-static  int     tag=0,id=0,start_0,start,fin,idd,pro,rank,name_len,i, j, T, del_T, l, m, n, x_max, y_max, T_max ,k;
-static  int     i_min, i_max, j_min, j_max, W_end, WN , end;
-static  int     ng,mg;
-static  int     SX, SY, RX, RY, SC, BC;
-static  double  sd, rd, bd, rds;
-static  int     wide_S,high_S,wide_E,high_E,wd,hg;
-static  double  stopwatch[3][10]={};
-static  int     Process_Point_X,Process_Point_Y; 
-static  int     P;
-static  double  set[10000]={};
+int     tag=0,id=0,start_0,start,fin,idd,pro,rank,name_len,i, j, T, del_T, l, m, n, x_max, y_max, T_max ,k;
+int     i_min, i_max, j_min, j_max, W_end, WN , end;
+int     ng,mg;
+int     SX, SY, RX, RY, SC, BC;
+float  sd, rd, bd, rds;
+int     wide_S,high_S,wide_E,high_E,wd,hg;
+float  stopwatch[3][10]={};
+int     Process_Point_X,Process_Point_Y; 
+int     P;
+float  set[10000]={};
 
 void gatherdata(int);
 
 #include        <stdio.h>
-#include        <stdlib.h>
+#include        <stdlib.h> 
 #include        <string.h>
 #include        <math.h>
 #include        <omp.h>
@@ -118,31 +118,31 @@ void Velocity(int id){
 void send_setting(MPI_Request send_req[10000],MPI_Request recv_req[10000]){
   // Not located on the left end
   if(Process_Point_X != 0){
-    MPI_Recv_init(data_r,y_max/hg,MPI_DOUBLE,id-hg,0,MPI_COMM_WORLD,&recv_req[id-hg]);
-    MPI_Send_init(data_s,y_max/hg,MPI_DOUBLE,id-hg,1,MPI_COMM_WORLD,&send_req[id-hg]);
+    MPI_Recv_init(data_r,y_max/hg,MPI_FLOAT,id-hg,0,MPI_COMM_WORLD,&recv_req[id-hg]);
+    MPI_Send_init(data_s,y_max/hg,MPI_FLOAT,id-hg,1,MPI_COMM_WORLD,&send_req[id-hg]);
   }
   // Not located on the right end
   if(Process_Point_X != wd-1){
-    MPI_Send_init(data_s,y_max/hg,MPI_DOUBLE,id+hg,0,MPI_COMM_WORLD,&send_req[id+hg]);
-    MPI_Recv_init(data_r,y_max/hg,MPI_DOUBLE,id+hg,1,MPI_COMM_WORLD,&recv_req[id+hg]);
+    MPI_Send_init(data_s,y_max/hg,MPI_FLOAT,id+hg,0,MPI_COMM_WORLD,&send_req[id+hg]);
+    MPI_Recv_init(data_r,y_max/hg,MPI_FLOAT,id+hg,1,MPI_COMM_WORLD,&recv_req[id+hg]);
   }
 
   // Not located on the upper end
   if(Process_Point_Y != 0){
-    MPI_Recv_init(data_r,x_max/wd,MPI_DOUBLE,id-1,2,MPI_COMM_WORLD,&recv_req[id-1]);
-    MPI_Send_init(data_s,x_max/wd,MPI_DOUBLE,id-1,3,MPI_COMM_WORLD,&send_req[id-1]);
+    MPI_Recv_init(data_r,x_max/wd,MPI_FLOAT,id-1,2,MPI_COMM_WORLD,&recv_req[id-1]);
+    MPI_Send_init(data_s,x_max/wd,MPI_FLOAT,id-1,3,MPI_COMM_WORLD,&send_req[id-1]);
   }
 
   // Not located on the lower end
   if(Process_Point_Y != hg-1){
-    MPI_Send_init(data_s,x_max/wd,MPI_DOUBLE,id+1,2,MPI_COMM_WORLD,&send_req[id+1]);
-    MPI_Recv_init(data_r,x_max/wd,MPI_DOUBLE,id+1,3,MPI_COMM_WORLD,&recv_req[id+1]);
+    MPI_Send_init(data_s,x_max/wd,MPI_FLOAT,id+1,2,MPI_COMM_WORLD,&send_req[id+1]);
+    MPI_Recv_init(data_r,x_max/wd,MPI_FLOAT,id+1,3,MPI_COMM_WORLD,&recv_req[id+1]);
   }
 }
 
 void share(int id,MPI_Status status,MPI_Request send_req[10000],MPI_Request recv_req[10000]){
   int count=0;
-  double ss,ee;
+  float ss,ee;
 
   // Not located on the left end
   if(Process_Point_X != 0){
@@ -223,17 +223,18 @@ void share(int id,MPI_Status status,MPI_Request send_req[10000],MPI_Request recv
 }
 
 
+void gatherdata(int id){
   MPI_Status status;
   int count=0;
 
   for(i = 1 ; i <= x_max/wd ; i++){
     if(id!=P-1){
       for(j = 1 + high_S; j <= high_E; ++j,++count) data_s[count]=P1[i + wide_S][j];
-      MPI_Send(data_s,y_max/hg,MPI_DOUBLE,P-1,0,MPI_COMM_WORLD);
+      MPI_Send(data_s,y_max/hg,MPI_FLOAT,P-1,0,MPI_COMM_WORLD);
       count=0;
     } else{
       for(j=0;j<P-1;j++){
-        MPI_Recv(data_r,y_max/hg,MPI_DOUBLE,j,0,MPI_COMM_WORLD,&status);
+        MPI_Recv(data_r,y_max/hg,MPI_FLOAT,j,0,MPI_COMM_WORLD,&status);
         for(k = 1 + y_max/hg*(j%hg); k <= y_max/hg*(j%hg+1) ; ++k,++count)
           P1[i + x_max/wd*(j/hg)][k]=data_r[count];
         count=0;

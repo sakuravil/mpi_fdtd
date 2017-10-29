@@ -4,34 +4,34 @@
 #define MAX_STRING 128
 #define PI 3.14159265358979
 
-  float  P1[X_m_max][Y_m_max];
-  float  Vx[X_m_max][Y_m_max];
-  float  Vy[X_m_max][Y_m_max];
-  float  send[3200];
-  float  recv[3200]={0},recv_P1[X_m_max][Y_m_max];
-  float  data_s[3200]={0};
-  float  data_r[3200]={0};
-  float  PX1[6][Y_m_max];
-  float  PY1[6][X_m_max];
-  float  PX2[6][Y_m_max];
-  float  PY2[6][X_m_max];
-  float  amp1[T_max_m],amp2[T_max_m];
-  float  time_e[10000]={0},time_s[10000]={0};
-  float  stopwatch[3][10]={};
+float  P1[X_m_max][Y_m_max];
+float  Vx[X_m_max][Y_m_max];
+float  Vy[X_m_max][Y_m_max];
+float  send[3200];
+float  recv[3200]={0},recv_P1[X_m_max][Y_m_max];
+float  data_s[3200]={0};
+float  data_r[3200]={0};
+float  PX1[6][Y_m_max];
+float  PY1[6][X_m_max];
+float  PX2[6][Y_m_max];
+float  PY2[6][X_m_max];
+float  amp1[T_max_m],amp2[T_max_m];
+float  time_e[10000]={0},time_s[10000]={0};
+float  stopwatch[3][10]={};
 
-  float  f, dx, dt, range, depth, cal_time;
-  float  rou0, c0, gensui0, absp0, alpha0, kap0, hasu0, c_m0, hasu_o0;
-  float  Cp1, Cp2, Cv1, Cv2;
-  float  Ca0, Ca1, Ca2, Cah1, Cah2, a1, a2, d1, d2;
+float  f, dx, dt, range, depth, cal_time;
+float  rou0, c0, gensui0, absp0, alpha0, kap0, hasu0, c_m0, hasu_o0;
+float  Cp1, Cp2, Cv1, Cv2;
+float  Ca0, Ca1, Ca2, Cah1, Cah2, a1, a2, d1, d2;
 
-  int     tag=0,id=0,start_0,start,fin,idd,pro,rank,name_len,i, j, T, del_T, l, m, n, x_max, y_max, T_max ,k;
-  int     i_min, i_max, j_min, j_max, W_end, WN , end;
-  int     ng,mg;
-  int     SX, SY, RX, RY, SC, BC;
-  float  sd, rd, bd, rds;
-  int     P;
-  float  set[10000]={};
-  float  ss,ee;
+int     tag=0,id=0,start_0,start,fin,idd,pro,rank,name_len,i, j, T, del_T, l, m, n, x_max, y_max, T_max ,k;
+int     i_min, i_max, j_min, j_max, W_end, WN , end;
+int     ng,mg;
+int     SX, SY, RX, RY, SC, BC;
+float  sd, rd, bd, rds;
+int     P;
+float  set[10000]={};
+float  ss,ee;
 
 void gatherdata(int);
 
