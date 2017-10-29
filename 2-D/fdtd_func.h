@@ -2,14 +2,11 @@
 #define FDTD_FUNC_H
 
 void Initialize(int id){
-  start=((x_max)/P)*id;
-  for( i = 0+start; i <= x_max/P+start ; ++i){
-    for( j = 0 ; j <= y_max - 1 ; ++j){
-      if(i<=x_max-1){
-        P1[i][j] = 0;
-        Vx[i][j] = 0;
-        Vy[i][j] = 0;
-      }
+  for(i = wide_S; i <= wide_E; i++){
+    for(j = high_S; j <= high_E; ++j){
+      P1[i][j] = 0;
+      Vx[i][j] = 0;
+      Vy[i][j] = 0;
     }
   }
 }
@@ -17,8 +14,8 @@ void Initialize(int id){
 void Make_param(void){
   int snap;
 
-  // parameter input
-  range = 1200;   // propagation distance [m]
+  // parameter input 
+  range = 1200;   // propagation distance [m] 
   depth = 1200;   // depth [m]
   cal_time = 1.2; // propagation time [sec]
 
@@ -26,7 +23,7 @@ void Make_param(void){
   dt = 0.0006;    // time step width [sec]
 
   f = 25;         // excitation frequency
-  WN = 4;         // excitation pulse length
+  WN = 4;         // excitation pulse length 
 
   // SC = 0: continuous wave,
   //      1: gauusian pulse wave,
@@ -35,8 +32,8 @@ void Make_param(void){
 
   rou0 = 1000;    // density
   c0 = 1500;      // sound velocity
-  absp0 = 0.0;    // absorption coefficient [dB/λ]
-  gensui0 = (f*absp0)/(8.686*c0); // damping coefficient [neper/m] 
+  absp0 = 0.0;    // absorption coefficient [dB/λ] 
+  gensui0 = (f*absp0)/(8.686*c0); // damping coefficient [neper/m]
 
   // BC = 0: Mur_1st, <<<<<<<------only use
   //      1: Mur_2nd,
@@ -57,6 +54,7 @@ void Make_param(void){
   snap = 10;              // number of snapshot  
   del_T = (int)(T_max/snap);
 
+
   if(SC== 0)W_end = T_max;  // float the excitation finish step count
   else if (SC == 1)W_end = (int)(2*WN/(f * dt));
   else if (SC == 2)W_end = (int)(WN/(f * dt));
@@ -72,7 +70,6 @@ void Make_param(void){
   hasu0 = sqrt(hasu_o0*hasu_o0 - gensui0*gensui0);      // wave number in case of loss
   c_m0 = 2*PI*f/hasu0;          
   alpha0 = 2*hasu_o0*gensui0*rou0*c_m0/hasu0;           // absorption term η
-
 
   // caluculation of difference expression coefficient
   kap0 = c_m0 * c_m0 * rou0;
@@ -99,39 +96,36 @@ void Make_param(void){
 // pulse wave
 float Driver(int T){
   float so, w, Tr, tau, al;
-
   w = 2 * PI * f;
-  Tr = w * dt * (float)T/WN;
-
+  Tr = w * dt * (float)T / WN;
   switch(SC){
     case 0:
-      if(Tr <= PI)so = ((1 - cos((float)(w * dt * (float)T / WN )))*sin((float)(w * dt * (float)T))/2);
-      else so = sin((float)(w * dt * (float)T));
+      if(Tr <= PI)so = ((1 - cos((float)(w * dt * (double)T/WN )))*sin((double)(w * dt * (double)T))/2);
+      else so = sin((float)(w * dt * (double)T));
       break;
 
-    case 1:
+    case 1: 
       tau = (float)WN/f;
       al = (4/tau)*(4/tau);
-      so = exp(-al*(dt*(float)T-tau)*(dt*(float)T-tau))*sin(w*(dt*(float)T-tau));
+      so = exp(-al*(dt*(float)T-tau)*(dt*(double)T-tau))*sin(w*(dt*(double)T-tau));
       break;
 
-    case 2:
-      if(T <= W_end)so = (float)((1-cos((float)(w*dt*(float)T/WN)))*sin((float)(w * dt * (float)T ))/2);
+    case 2: 
+      if(T <= W_end)so = (float)((1-cos((double)(w*dt*(double)T/WN)))*sin((double)(w * dt * (double)T))/2);
       else so = 0.0;
       break;
 
-    case 3: // 
+    case 3: //
       break;
 
-    default:
+    default: 
       tau = (float)WN/f;
       al = (4/tau)*(4/tau);
-      so = exp(-al*(dt*(float)T-tau)*(dt*(float)T-tau))*sin(w*(dt*(float)T-tau));
+      so = exp(-al*(dt*(float)T-tau)*(dt*(double)T-tau))*sin(w*(dt*(double)T-tau));
   }
   return  so;
 }
 
-// preservation of received waveform data
 void WaveT(int id){
   if(id==3)amp1[T]= P1[SX][SY];
   else if(id==6)amp2[T]= P1[RX][RY];
@@ -147,13 +141,13 @@ void OutputF(void){
     exit(1);
   }
 
-  for(j = 0 ; j <= y_max-1 ; j++){
-    for(i = 0 ; i <= x_max-1 ; i++){
+  for(j = 0; j <= y_max-1; j++){
+    for(i = 0; i <= x_max-1; i++){
       bun = P1[i][j]*P1[i][j];
-      if(bun < 1e-15)
+      if( bun < 1e-15)
         bun = -150;
       else 
-        bun = 10.0*log10(bun);
+        bun =  10.0*log10( bun );
       fprintf(fp11,"%d %d %f \t\n",i,j,(float)bun);
       i=i+mg;
     }
@@ -172,18 +166,18 @@ void OutputW(int id){
   float bun1,bun2;
 
   if(id==3){
-    if( NULL == (fp12 = fopen( file12,"w"))){
+    if(NULL == (fp12 = fopen(file12,"w"))){
       printf("\n\n Cannot Open File : %s\n",file12);
       exit(1);
     }
   } else if(id==6){
-    if( NULL == ( fp13 = fopen( file13,"w"))){
+    if(NULL == (fp13 = fopen(file13,"w"))){
       printf("\n\n Cannot Open File : %s\n",file13);
       exit(1);
     }
   }
 
-  for(i = 0 ; i <= T_max ; i++){
+  for(i = 0; i <= T_max; i++){
     sub_t = dt*(float)i;
     if(id==3){
       bun1 = amp1[i];
@@ -197,16 +191,15 @@ void OutputW(int id){
     fclose(fp12);
     printf("output projected wave file : %s\n",file12);
   } else if(id==6){
-      fclose(fp13);
-      printf("output received wave file : %s\n",file13);
+    fclose(fp13);
+    printf("output received wave file : %s\n",file13);
   }
 }
 
-// output 
 void FieldSnap(float recv[][3200]){
   FILE *fp[5000];
   char fname[8];
-  int  k,l,m,n;
+  int k,l,m,n;
   static  char number[11]="0123456789";
   float bun;
 
@@ -224,14 +217,14 @@ void FieldSnap(float recv[][3200]){
   fname[6] = 't';
   fname[7] = 0;
 
-  if( NULL == (fp[k] = fopen(fname,"w"))){
+  if(NULL == (fp[k] = fopen(fname,"w"))){
     printf("\n\n Cannot Open File : %s\n",fname);
     exit(1);
   }
 
-  for(j = 0 ; j <=  y_max -1; j++){
-    for(i = 0 ; i <= x_max -1; i++){
-      bun = recv[i][j]*recv[i][j];
+  for(j = 0; j <= y_max-1; j++){
+    for(i = 0; i <= x_max -1; i++){
+      bun = recv[i][j]*recv[i][j] ;
       if(bun < 1e-15)
         bun = (float)-150;
       else
@@ -245,19 +238,19 @@ void FieldSnap(float recv[][3200]){
   fclose(fp[k]);        
 }
 
-// use memory
+
 void use_popen(void){
   FILE *fp;
   char command[MAX_STRING];
   char output[MAX_STRING];
   sprintf(command, "grep VmSize /proc/%d/status", getpid());
-  if ((fp = popen(command, "r")) == NULL){
+  if((fp = popen(command, "r")) == NULL){
     return;
   }
-  while (fgets(output, MAX_STRING, fp) != NULL) {
+  while(fgets(output, MAX_STRING, fp) != NULL) {
     printf("%s", output);
   }
-  if (pclose(fp) == -1){
+  if(pclose(fp) == -1){
   }
 }
 
