@@ -4,34 +4,34 @@
 #define MAX_STRING 128
 #define PI 3.14159265358979
 
-static  float  P1[X_m_max][Y_m_max];
-static  float  Vx[X_m_max][Y_m_max];
-static  float  Vy[X_m_max][Y_m_max];
-static  float  send[3200];
-static  float  recv[3200]={0},recv_P1[X_m_max][Y_m_max];
-static  float  data_s[3200]={0};
-static  float  data_r[3200]={0};
-static  float  PX1[6][Y_m_max];
-static  float  PY1[6][X_m_max];
-static  float  PX2[6][Y_m_max];
-static  float  PY2[6][X_m_max];
-static  float  amp1[T_max_m],amp2[T_max_m];
-static  float  time_e[10000]={0},time_s[10000]={0};
-static  float  stopwatch[3][10]={};
+  float  P1[X_m_max][Y_m_max];
+  float  Vx[X_m_max][Y_m_max];
+  float  Vy[X_m_max][Y_m_max];
+  float  send[3200];
+  float  recv[3200]={0},recv_P1[X_m_max][Y_m_max];
+  float  data_s[3200]={0};
+  float  data_r[3200]={0};
+  float  PX1[6][Y_m_max];
+  float  PY1[6][X_m_max];
+  float  PX2[6][Y_m_max];
+  float  PY2[6][X_m_max];
+  float  amp1[T_max_m],amp2[T_max_m];
+  float  time_e[10000]={0},time_s[10000]={0};
+  float  stopwatch[3][10]={};
 
-static  float  f, dx, dt, range, depth, cal_time;
-static  float  rou0, c0, gensui0, absp0, alpha0, kap0, hasu0, c_m0, hasu_o0;
-static  float  Cp1, Cp2, Cv1, Cv2;
-static  float  Ca0, Ca1, Ca2, Cah1, Cah2, a1, a2, d1, d2;
+  float  f, dx, dt, range, depth, cal_time;
+  float  rou0, c0, gensui0, absp0, alpha0, kap0, hasu0, c_m0, hasu_o0;
+  float  Cp1, Cp2, Cv1, Cv2;
+  float  Ca0, Ca1, Ca2, Cah1, Cah2, a1, a2, d1, d2;
 
-static  int     tag=0,id=0,start_0,start,fin,idd,pro,rank,name_len,i, j, T, del_T, l, m, n, x_max, y_max, T_max ,k;
-static  int     i_min, i_max, j_min, j_max, W_end, WN , end;
-static  int     ng,mg;
-static  int     SX, SY, RX, RY, SC, BC;
-static  float  sd, rd, bd, rds;
-static  int     P;
-static  float  set[10000]={};
-static  float  ss,ee;
+  int     tag=0,id=0,start_0,start,fin,idd,pro,rank,name_len,i, j, T, del_T, l, m, n, x_max, y_max, T_max ,k;
+  int     i_min, i_max, j_min, j_max, W_end, WN , end;
+  int     ng,mg;
+  int     SX, SY, RX, RY, SC, BC;
+  float  sd, rd, bd, rds;
+  int     P;
+  float  set[10000]={};
+  float  ss,ee;
 
 void gatherdata(int);
 
@@ -85,13 +85,13 @@ void Velocity(int id){
 
 void send_setting(MPI_Request req[1000],MPI_Request rreq[1000]){
   if(id!=0 && id<P){
-    MPI_Send_init(data_s,y_max-1,MPI_float,id-1,0,MPI_COMM_WORLD,&req[id-1]);
-    MPI_Recv_init(data_r,y_max-1,MPI_float,id-1,0,MPI_COMM_WORLD,&rreq[id-1]);
+    MPI_Send_init(data_s,y_max-1,MPI_FLOAT,id-1,0,MPI_COMM_WORLD,&req[id-1]);
+    MPI_Recv_init(data_r,y_max-1,MPI_FLOAT,id-1,0,MPI_COMM_WORLD,&rreq[id-1]);
   }
 
   if(id!=P-1 && id<P){
-    MPI_Send_init(data_s,y_max-1,MPI_float,id+1,0,MPI_COMM_WORLD,&req[id+1]);
-    MPI_Recv_init(data_r,y_max-1,MPI_float,id+1,0,MPI_COMM_WORLD,&rreq[id+1]);
+    MPI_Send_init(data_s,y_max-1,MPI_FLOAT,id+1,0,MPI_COMM_WORLD,&req[id+1]);
+    MPI_Recv_init(data_r,y_max-1,MPI_FLOAT,id+1,0,MPI_COMM_WORLD,&rreq[id+1]);
   }
 }
 
@@ -137,10 +137,10 @@ void gatherdata(int id){
     if(id!=P-1){
       #pragma omp parallel for 
       for( j = 1; j <= y_max-1 ; ++j )data_s[j]=P1[i+x_max/P*id][j]; 
-        MPI_Send(data_s,y_max-1,MPI_float,P-1,0,MPI_COMM_WORLD);      
+        MPI_Send(data_s,y_max-1,MPI_FLOAT,P-1,0,MPI_COMM_WORLD);      
     } else{
         for(j=0;j<P-1;j++){
-          MPI_Recv(data_r,y_max-1,MPI_float,j,0,MPI_COMM_WORLD,&status);
+          MPI_Recv(data_r,y_max-1,MPI_FLOAT,j,0,MPI_COMM_WORLD,&status);
           for( k = 1; k <= y_max-1 ; ++k )P1[i+x_max/P*j][k]=data_r[k];
         }
     }
