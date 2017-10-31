@@ -3,7 +3,7 @@
 ## FDTD
 Acoustic FDTD calculation under water<br>
 
-## Hybrid(MPI+Openmp) Calculation
+## Parallel (MPI+OpenMP) Processing
 - 1-D <br>
 one-dimensional split calculation
 - 2-D <br>
